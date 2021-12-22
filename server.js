@@ -9,27 +9,20 @@ const Bot = require("./classes/Bot");
 const hunter = require("./Scripts/hunter.js");
 const autoWatchDog = require("./Scripts/autoWatchDog");
 const scanGalaxy = require("./Scripts/scanGalaxy.js");
-const {
-  timeout
-} = require("./utils/utils.js");
+const { timeout } = require("./utils/utils.js");
 const Player = require("./models/Players");
 const Galaxy = require("./models/Galaxies");
 const BotModel = require("./models/Bots");
-const {
-  PendingXHR
-} = require("pending-xhr-puppeteer");
+const { PendingXHR } = require("pending-xhr-puppeteer");
 const formatISO9075 = require("date-fns/formatISO9075");
 const getMonth = require("date-fns/getMonth");
 const getDate = require("date-fns/getDate");
 const getHours = require("date-fns/getHours");
-const {
-  format,
-  utcToZonedTime
-} = require("date-fns-tz");
+const { format, utcToZonedTime } = require("date-fns-tz");
 const _ = require("underscore");
 const config = require("./config");
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 app.use(express.static(__dirname + "/public"));
 //Express HBS engine
@@ -54,7 +47,8 @@ app.use(bodyParser.json());
 //Helpers
 //DB
 mongoose.connect(
-  "mongodb+srv://VictorJJF:Sed4cfv52309$@cluster0-ceisv.mongodb.net/pepebot", {
+  "mongodb+srv://ViktorJJF:Sed4cfv52309$@jfbotscluster.88rtm.mongodb.net/pepeBot",
+  {
     useNewUrlParser: true,
   },
   (err, res) => {
@@ -73,11 +67,12 @@ let playersToHunt = [];
   if (config.environment === "dev") return;
   await bot.begin("prod");
   // await bot.login("jimenezflorestacna@gmail.com", "sed4cfv52309@");
-  await bot.login("rodrigo.diazranilla@gmail.com", "phoneypeople");
+  await bot.login(config.USER, config.PASS);
   // await bot.login("vj.jimenez96@gmail.com", "sed4cfv52309@");
   // await bot.login("cs.nma18@gmail.com", "sofia2710");
   if (config.environment === "dev") return;
-  let playersFromDB = await Player.find({
+  let playersFromDB = await Player.find(
+    {
       server: config.SERVER,
     },
     ["nickname", "hunt"]
@@ -122,30 +117,28 @@ app.get("/acciones", async (req, res) => {
 });
 
 app.get("/hunter", async (req, res) => {
-  let {
-    page,
-    perPage
-  } = req.query;
+  let { page, perPage } = req.query;
   page = page || 1;
   perPage = perPage || 5;
   let options = {
     skip: (parseInt(page) - 1) * parseInt(perPage) || 0,
     limit: parseInt(perPage) || 5,
   };
-  let playersToHunt = await Player.find({
-        server: config.SERVER,
-      },
-      null,
-      options
-    )
+  let playersToHunt = await Player.find(
+    {
+      server: config.SERVER,
+    },
+    null,
+    options
+  )
     .select("-planets")
     .exec();
   let totalPlayersToHunt = await Player.count({
     server: config.SERVER,
   });
   let allPlayersToHunt = await Player.find({
-      server: config.SERVER,
-    })
+    server: config.SERVER,
+  })
     .select("-planets")
     .exec();
   let totalPages = Math.ceil(totalPlayersToHunt / perPage);
@@ -215,8 +208,8 @@ app.post("/universo", async (req, res) => {
 
 app.get("/tablas", async (req, res) => {
   let players = await Player.find({
-      server: config.SERVER,
-    })
+    server: config.SERVER,
+  })
 
     .select("nickname -_id")
     .exec();
@@ -366,9 +359,9 @@ app.post("/api/players/planet", async (req, res) => {
     activities: [],
   };
   let playerToUpdate = await Player.findOne({
-      server: config.SERVER,
-      nickname,
-    })
+    server: config.SERVER,
+    nickname,
+  })
     .select("-planets.activities")
     .exec();
   playerToUpdate.planets.push(newPlanet);
@@ -403,9 +396,9 @@ app.get("/api/players/:id", async (req, res) => {
     let playerInfo;
     if (playerId) {
       playerInfo = await Player.findOne({
-          server: config.SERVER,
-          id: playerId,
-        })
+        server: config.SERVER,
+        id: playerId,
+      })
         .select("-planets.activities")
         .exec();
     } else playerInfo = [];
@@ -466,9 +459,9 @@ app.get("/api/hunteados", (req, res) => {
 app.get("/api/scan", async (req, res) => {
   let nickname = req.query.nickname.toLowerCase();
   let playerInfo = await Player.findOne({
-      server: config.SERVER,
-      nickname,
-    })
+    server: config.SERVER,
+    nickname,
+  })
     .select("-planets.activities")
     .exec();
   if (!playerInfo) {
@@ -518,8 +511,8 @@ app.get("/api/scan/universe", async (req, res) => {
   let galaxies = await Galaxy.deleteMany({
     server: config.SERVER,
   });
-  for (let i = 1; i <= 6; i++) {
-    scanGalaxy(String(i), bot);
+  for (let i = 1; i <= 9; i++) {
+    await scanGalaxy(String(i), bot);
     // await timeout(5 * 1000);
   }
   console.log("se termino de escanear el universo");

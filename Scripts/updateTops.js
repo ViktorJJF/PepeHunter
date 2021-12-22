@@ -10,7 +10,7 @@ let totalPlayers = [];
 let getTopPlayers = async (bot) => {
   let page = await bot.createNewPage();
   await page.goto(
-    "https://s168-es.ogame.gameforge.com/game/index.php?page=highscore"
+    "https://s208-es.ogame.gameforge.com/game/index.php?page=highscore"
   );
   for (let i = 1; i <= 8; i++) {
     totalPlayers = [...totalPlayers, ...(await scanTotalPointsPage(i, page))];

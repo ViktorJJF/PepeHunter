@@ -15,8 +15,8 @@ module.exports = class Bot {
     this.language = null;
     this.telegramGroupId = null;
     this.telegramId = null;
-    this.ogameEmail = "rodrigo.diazranilla@gmail.com";
-    this.ogamePassword = "phoneypeople";
+    this.ogameEmail = "viktor.developer96@gmail.com";
+    this.ogamePassword = "sed4cfv52309$";
     this.state = null;
     this.userId = null;
     this.page = null;
@@ -51,10 +51,10 @@ module.exports = class Bot {
     this.actions = [];
   }
   async begin(environment) {
-    console.log("iniciando bot...");
+    console.log("iniciando bot...", environment);
     if (environment === "dev") {
       const pathToExtension =
-        "C:\\Users\\JIMENEZ\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\ipmfkhoihjbbohnfecpmhekhippaplnh\\4.1.3_0";
+        "C:\\Users\\Viktor\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\ipmfkhoihjbbohnfecpmhekhippaplnh\\4.2.0_0";
       this.browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -82,13 +82,11 @@ module.exports = class Bot {
       console.log(`Empezando Logeo...`);
       //closing add
       await this.closeAds(page);
+      await page.waitForSelector(".cookiebanner5:nth-child(2)");
+      await page.click(".cookiebanner5:nth-child(2)");
 
-      await page.waitForSelector(
-        "div > #loginRegisterTabs > .tabsList > li:nth-child(1) > span"
-      );
-      await page.click(
-        "div > #loginRegisterTabs > .tabsList > li:nth-child(1) > span"
-      );
+      await page.waitForSelector("#loginRegisterTabs .tabsList li");
+      await page.click("#loginRegisterTabs .tabsList li");
 
       await page.waitForSelector('input[type="email"]');
       await page.click('input[type="email"]');
@@ -109,14 +107,13 @@ module.exports = class Bot {
           delay: this.typingDelay,
         }
       );
-      await page.waitForSelector(
-        "#loginTab > #loginForm > p > .button-primary > span"
+      await page.click(
+        "#loginRegisterTabs > #loginTab > #loginForm > p > .button-primary"
       );
-      await page.click("#loginTab > #loginForm > p > .button-primary > span");
-      await page.waitForSelector("div > #joinGame > a > .button > span", {
+      await page.waitForSelector(".column > div > #joinGame > a > .button", {
         timeout: 3000,
       });
-      await page.click("div > #joinGame > a > .button > span");
+      await page.click(".column > div > #joinGame > a > .button");
 
       // await page.waitForSelector(".open > .rt-tr > .rt-td > .btn > span");
       // await page.click(".open > .rt-tr > .rt-td > .btn > span");
@@ -292,12 +289,10 @@ module.exports = class Bot {
           attackDetail.hostilePlayer.origin.coords = enemyMission
             .querySelector("td.coordsOrigin")
             .innerText.replace(/[\[\]']+/g, "");
-          let planetPosition = attackDetail.hostilePlayer.origin.coords.split(
-            ":"
-          )[2];
-          attackDetail.hostilePlayer.origin.planetName = enemyMission.querySelector(
-            "td.originFleet"
-          ).innerText;
+          let planetPosition =
+            attackDetail.hostilePlayer.origin.coords.split(":")[2];
+          attackDetail.hostilePlayer.origin.planetName =
+            enemyMission.querySelector("td.originFleet").innerText;
           attackDetail.hostilePlayer.origin.type = enemyMission.querySelector(
             "td.originFleet>figure.moon"
           )
@@ -307,9 +302,8 @@ module.exports = class Bot {
           attackDetail.hostilePlayer.target.coords = enemyMission
             .querySelector("td.destCoords")
             .innerText.replace(/[\[\]']+/g, "");
-          attackDetail.hostilePlayer.target.planetName = enemyMission.querySelector(
-            "td.destFleet"
-          ).innerText;
+          attackDetail.hostilePlayer.target.planetName =
+            enemyMission.querySelector("td.destFleet").innerText;
           attackDetail.hostilePlayer.target.type = enemyMission.querySelector(
             "td.destFleet>figure.moon"
           )
@@ -366,14 +360,14 @@ module.exports = class Bot {
     var page = page || this.page;
     let [galaxy, system, planet] = coords.split(":");
     var galaxyView = await page.$(
-      "#menuTable>li:nth-child(10)>a.menubutton.selected"
+      "#menuTable>li:nth-child(9)>a.menubutton.selected"
     );
     if (!galaxyView) {
       await page.waitForSelector(
-        "#toolbarcomponent > #links > #menuTable > li:nth-child(10) > .menubutton"
+        "#toolbarcomponent > #links > #menuTable > li:nth-child(9) > .menubutton"
       );
       await page.click(
-        "#toolbarcomponent > #links > #menuTable > li:nth-child(10) > .menubutton"
+        "#toolbarcomponent > #links > #menuTable > li:nth-child(9) > .menubutton"
       );
     }
     let galaxyInputSelector = "#galaxy_input";
@@ -408,7 +402,7 @@ module.exports = class Bot {
         "#galaxycomponent > #inhalt > #galaxyHeader > form > .btn_blue:nth-child(9)"
       );
     }
-    await page.waitForSelector("tr.row");
+    await page.waitForSelector(".galaxyRow.ctContentRow");
   }
 
   async goToPage(pageName, page) {
@@ -419,10 +413,10 @@ module.exports = class Bot {
         this.currentPage = "galaxy";
         console.log("yendo a vista galaxias");
         await page.waitForSelector(
-          "#toolbarcomponent > #links > #menuTable > li:nth-child(10) > .menubutton"
+          "#toolbarcomponent > #links > #menuTable > li:nth-child(9) > .menubutton"
         );
         await page.click(
-          "#toolbarcomponent > #links > #menuTable > li:nth-child(10) > .menubutton"
+          "#toolbarcomponent > #links > #menuTable > li:nth-child(9) > .menubutton"
         );
         // await navigationPromise
         break;
@@ -509,8 +503,9 @@ module.exports = class Bot {
         );
         if (planetSelector.querySelector(".activity")) {
           if (planetSelector.querySelector(".activity.showMinutes")) {
-            lastActivity = planetSelector.querySelector(".activity.showMinutes")
-              .innerText;
+            lastActivity = planetSelector.querySelector(
+              ".activity.showMinutes"
+            ).innerText;
           } else {
             lastActivity = "on";
           }
@@ -535,7 +530,7 @@ module.exports = class Bot {
     await pendingXHR.waitForAllXhrFinished();
     console.log("empezando scraping");
     let planets = [];
-    let planetsSelector = await page.$$("tr.row");
+    let planetsSelector = await page.$$(".galaxyRow.ctContentRow");
     let position = 1;
     for (const planet of planetsSelector) {
       let planetJson = {};
@@ -558,14 +553,16 @@ module.exports = class Bot {
         //   };
         // });
         planetJson.name = await planet.evaluate((e) => {
-          let planetNameSelector = e.querySelector("td.planetname");
+          let planetNameSelector = e.querySelector(".cellPlanetName");
           return planetNameSelector
             ? planetNameSelector.innerText
             : "Desconocido...";
         });
         planetJson.playerName = await planet.evaluate((e) =>
-          e.querySelector("td.playername>a>span")
-            ? e.querySelector("td.playername>a>span").innerText
+          e.querySelector(".cellPlayerName>span")
+            ? e.querySelector(".cellPlayerName>span").innerText.length === 0
+              ? e.querySelector(".cellPlayerName>span:nth-child(2)").innerText
+              : e.querySelector(".cellPlayerName>span").innerText
             : null
         );
         planetJson.rank = await planet.evaluate((e) =>
@@ -598,14 +595,14 @@ module.exports = class Bot {
         });
         // planetJson.militaryInfo = militaryInfo;
         planetJson.moon = (await planet.evaluate((e) =>
-          e.querySelector(".moon.js_no_action")
+          e.querySelector(".micromoon.moon_a")
         ))
-          ? false
-          : true;
+          ? true
+          : false;
         let [galaxy, system] = coords.split(":");
         planetJson.coords = `${galaxy}:${system}:${position}`;
         planetJson.playerId = await planet.evaluate((e) => {
-          let playerId = e.querySelector("td.action a.sendMail");
+          let playerId = e.querySelector("a.sendMail");
           return playerId ? playerId.getAttribute("data-playerid") : 0;
         });
         //me

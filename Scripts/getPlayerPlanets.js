@@ -2,6 +2,7 @@ const { timeout } = require("../utils/utils");
 const { PendingXHR } = require("pending-xhr-puppeteer");
 const ogameApi = require("../ogameApi");
 const Bot = require("../classes/Bot");
+const config = require("../config");
 
 let globalPlanets = [];
 let start = async (nickname, bot) => {
@@ -28,12 +29,12 @@ let scanGalaxy = async (galaxyNumber, from, to, playerId, bot) => {
         page,
         pendingXHR
       );
-      planets.forEach(planet => {
+      planets.forEach((planet) => {
         if (planet.playerId === playerId) {
           globalPlanets.push({
             playerName: planet.playerName,
             coords: planet.coords,
-            moon: planet.moon
+            moon: planet.moon,
           });
           console.log("Se encontro este planeta:", planet);
         }
@@ -50,7 +51,7 @@ let scanGalaxy = async (galaxyNumber, from, to, playerId, bot) => {
 (async () => {
   let bot = new Bot();
   await bot.begin("dev");
-  await bot.login("rodrigo.diazranilla@gmail.com", "phoneypeople");
+  await bot.login(config.USER, config.PASS);
   start("sacz", bot);
 })();
 
