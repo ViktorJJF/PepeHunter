@@ -78,7 +78,7 @@ let findPlayerById = (playerId) => {
 
 (async () => {
   let bot = new Bot();
-  await bot.begin("dev");
+  await bot.begin("development");
   await bot.login("cs.nma18@gmail.com", "sofia2710");
   await getTopPlayers(bot);
   await updateGalaxiesTop();

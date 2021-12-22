@@ -50,7 +50,7 @@ let scanGalaxy = async (galaxyNumber, from, to, playerId, bot) => {
 
 (async () => {
   let bot = new Bot();
-  await bot.begin("dev");
+  await bot.begin("development");
   await bot.login(config.USER, config.PASS);
   start("sacz", bot);
 })();

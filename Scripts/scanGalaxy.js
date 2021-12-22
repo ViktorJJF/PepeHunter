@@ -36,7 +36,7 @@ let scanGalaxy = async (galaxyNumber, bot) => {
 
 // (async () => {
 //   let bot = new Bot();
-//   await bot.begin("dev");
+//   await bot.begin("development");
 //   await bot.login(config.USER, config.PASS);
 //   await timeout(10000);
 //   for (let i = 1; i <= 9; i++) {

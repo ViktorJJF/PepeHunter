@@ -64,13 +64,13 @@ let playersToHunt = [];
   //init
   // require("./Scripts/updateTops");
   require("./services/heroku");
-  if (config.environment === "dev") return;
+  if (config.environment === "development") return;
   await bot.begin("prod");
   // await bot.login("jimenezflorestacna@gmail.com", "sed4cfv52309@");
   await bot.login(config.USER, config.PASS);
   // await bot.login("vj.jimenez96@gmail.com", "sed4cfv52309@");
   // await bot.login("cs.nma18@gmail.com", "sofia2710");
-  if (config.environment === "dev") return;
+  if (config.environment === "development") return;
   let playersFromDB = await Player.find(
     {
       server: config.SERVER,
@@ -178,7 +178,7 @@ app.get("/universo", async (req, res) => {
   let date = formatISO9075(galaxy.createdAt);
   // console.log("el sistema solar: ", galaxy);
   let planetsIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  let galaxiesIndex = [1, 2, 3, 4, 5, 6];
+  let galaxiesIndex = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   res.render("universe", {
     galaxy: galaxy.solarSystem,
     planetsIndex,

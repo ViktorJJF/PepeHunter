@@ -52,7 +52,7 @@ module.exports = class Bot {
   }
   async begin(environment) {
     console.log("iniciando bot...", environment);
-    if (environment === "dev") {
+    if (environment === "development") {
       const pathToExtension =
         "C:\\Users\\Viktor\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\ipmfkhoihjbbohnfecpmhekhippaplnh\\4.2.0_0";
       this.browser = await puppeteer.launch({
