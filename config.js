@@ -3,7 +3,7 @@ module.exports = {
   SERVER: "s208",
   LANGUAGE: "es",
   UNIVERSE: "Pasiphae",
-  PEPEBOTDOMAIN: "https://pepebotogame.herokuapp.com",
+  PEPEBOTDOMAIN: "http://localhost:8000",
   USER: "rodrigo.diazranilla@gmail.com",
   PASS: "phoneypeople",
 };

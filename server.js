@@ -23,6 +23,7 @@ const _ = require("underscore");
 const config = require("./config");
 
 const port = process.env.PORT || 8000;
+require("./Scripts/getPlayerPlanetsFromGalaxy");
 
 app.use(express.static(__dirname + "/public"));
 //Express HBS engine
@@ -64,8 +65,8 @@ let playersToHunt = [];
   //init
   // require("./Scripts/updateTops");
   require("./services/heroku");
-  if (config.environment === "development") return;
-  await bot.begin("prod");
+  // if (config.environment === "development") return;
+  await bot.begin("development");
   // await bot.login("jimenezflorestacna@gmail.com", "sed4cfv52309@");
   await bot.login(config.USER, config.PASS);
   // await bot.login("vj.jimenez96@gmail.com", "sed4cfv52309@");
@@ -508,10 +509,10 @@ app.get("/api/scan/universe", async (req, res) => {
     msg: "Empezando a escanear universo",
   });
   //eliminando scan anterior
-  let galaxies = await Galaxy.deleteMany({
-    server: config.SERVER,
-  });
-  for (let i = 1; i <= 9; i++) {
+  // let galaxies = await Galaxy.deleteMany({
+  //   server: config.SERVER,
+  // });
+  for (let i = 9; i <= 9; i++) {
     await scanGalaxy(String(i), bot);
     // await timeout(5 * 1000);
   }
