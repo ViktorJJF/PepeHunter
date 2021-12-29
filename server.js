@@ -65,11 +65,8 @@ let playersToHunt = [];
   // require("./Scripts/updateTops");
   // require("./services/heroku");
   // if (config.environment === "development") return;
-  await bot.begin("development");
-  // await bot.login("jimenezflorestacna@gmail.com", "sed4cfv52309@");
+  await bot.begin(config.environment);
   await bot.login(config.USER, config.PASS);
-  // await bot.login("vj.jimenez96@gmail.com", "sed4cfv52309@");
-  // await bot.login("cs.nma18@gmail.com", "sofia2710");
   if (config.environment === "development") return;
   let playersFromDB = await Player.find(
     {

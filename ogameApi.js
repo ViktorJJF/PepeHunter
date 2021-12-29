@@ -109,5 +109,5 @@ module.exports = {
 };
 
 (async () => {
-  console.log(await getPlayerInfo("oVettoCattiVo"));
+  // console.log(await getPlayerInfo("oVettoCattiVo"));
 })();
