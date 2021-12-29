@@ -68,26 +68,26 @@ let playersToHunt = [];
   await bot.begin(config.environment);
   await bot.login(config.USER, config.PASS);
   if (config.environment === "development") return;
-  let playersFromDB = await Player.find(
-    {
-      server: config.SERVER,
-    },
-    ["nickname", "hunt"]
-  );
-  // console.log("players from db es:", playersFromDB);
-  //change
-  playersFromDB.forEach((player) => {
-    if (player.hunt) {
-      playersToHunt.push(player.nickname);
-    }
-  });
-  playersFromDB = null;
-  while (1 == 1) {
-    for (const playerToHunt of playersToHunt) {
-      await hunter(playerToHunt, bot);
-    }
-    await timeout(0 * 60 * 1000);
-  }
+  // let playersFromDB = await Player.find(
+  //   {
+  //     server: config.SERVER,
+  //   },
+  //   ["nickname", "hunt"]
+  // );
+  // // console.log("players from db es:", playersFromDB);
+  // //change
+  // playersFromDB.forEach((player) => {
+  //   if (player.hunt) {
+  //     playersToHunt.push(player.nickname);
+  //   }
+  // });
+  // playersFromDB = null;
+  // while (1 == 1) {
+  //   for (const playerToHunt of playersToHunt) {
+  //     await hunter(playerToHunt, bot);
+  //   }
+  //   await timeout(0 * 60 * 1000);
+  // }
 })();
 
 app.get("/", (req, res) => {
