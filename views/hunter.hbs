@@ -14,7 +14,7 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Jugador</th>
-            <th scope="col">Hunteando?</th>
+            <th scope="col">¿Hunteando?</th>
             <th scope="col">Opciones</th>
           </tr>
         </thead>
@@ -29,46 +29,25 @@
               <form action="/universo" method="POST">
                 <div class="custom-control custom-checkbox mr-sm-2">
                   {{#if hunt}}
-                  <input
-                    name="hunt"
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="customControlAutosizing{{ i }}"
-                    checked
-                  />
-                  <label
-                    class="custom-control-label"
-                    for="customControlAutosizing{{ i }}"
-                    >Sí</label
-                  >
+                  <input name="hunt" type="checkbox" class="custom-control-input" id="customControlAutosizing{{ i }}"
+                    checked />
+                  <label class="custom-control-label" for="customControlAutosizing{{ i }}">Sí</label>
                   {{else}}
-                  <input
-                    name="hunt"
-                    type="checkbox"
-                    class="custom-control-input"
-                    id="customControlAutosizing{{ i }}"
-                  />
-                  <label
-                    class="custom-control-label"
-                    for="customControlAutosizing{{ i }}"
-                    >No</label
-                  >
+                  <input name="hunt" type="checkbox" class="custom-control-input" id="customControlAutosizing{{ i }}" />
+                  <label class="custom-control-label" for="customControlAutosizing{{ i }}">No</label>
                   {{/if}}
                 </div>
               </form>
             </td>
             <td>
-              <button
-                onclick="editPlayer(this)"
-                id="editPlayer"
-                type="button"
-                playerId="{{ _id }}"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#exampleModal"
-              >
-                Editar
+              <button onclick="deletePlayer(this)" id="deletePlayer" type="button" playerId="{{ _id }}"
+                class="btn btn-danger">
+                Eliminar
               </button>
+              {{!-- <button onclick="editPlayer(this)" id="editPlayer" type="button" playerId="{{ _id }}"
+                class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Editar
+              </button> --}}
             </td>
           </tr>
           {{/each}}
@@ -79,27 +58,15 @@
   <nav aria-label="Page navigation example mr-3">
     <ul class="pagination justify-content-end flex-wrap">
       <li class="page-item">
-        <a
-          class="page-link"
-          href="/hunter?page={{ diff page 1 }}&&perPage={{ perPage }}"
-          >Atrás</a
-        >
+        <a class="page-link" href="/hunter?page={{ diff page 1 }}&&perPage={{ perPage }}">Atrás</a>
       </li>
       {{#for 1 totalPages 1}}
       <li class="page-item {{#if_eq this ../page}}active{{/if_eq}}">
-        <a
-          class="page-link"
-          href="/hunter?page={{this}}&&perPage=5"
-          >{{this}}</a
-        >
+        <a class="page-link" href="/hunter?page={{this}}&&perPage=5">{{this}}</a>
       </li>
       {{/for}}
       <li class="page-item">
-        <a
-          class="page-link"
-          href="/hunter?page={{ sum page 1 }}&&perPage={{ perPage }}"
-          >Adelante</a
-        >
+        <a class="page-link" href="/hunter?page={{ sum page 1 }}&&perPage={{ perPage }}">Adelante</a>
       </li>
     </ul>
   </nav>
@@ -109,13 +76,8 @@
     <div class="row">
       <div class="col-12 col-sm-10">
         <div class=" form-group">
-          <input
-            name="nickname"
-            type="text"
-            class="form-control"
-            id="exampleInputEmail1"
-            placeholder="ESCRIBE SU NICK"
-          />
+          <input name="nickname" type="text" class="form-control" id="exampleInputEmail1"
+            placeholder="ESCRIBE SU NICK" />
         </div>
       </div>
       <div class="col-12 col-sm-2">
@@ -146,25 +108,13 @@
     </div> -->
     <div class="form-group">
       <label for="inputName">Nombre</label>
-      <input
-        name="name"
-        placeholder="Nombre del planeta/luna"
-        type="text"
-        class="form-control"
-        id="inputName"
-        aria-describedby="emailHelp"
-      />
+      <input name="name" placeholder="Nombre del planeta/luna" type="text" class="form-control" id="inputName"
+        aria-describedby="emailHelp" />
     </div>
     <div class="form-group">
       <label for="inputCoords">Coordenadas</label>
-      <input
-        name="coords"
-        placeholder="Coordenadas planeta/luna"
-        type="text"
-        class="form-control"
-        id="inputCoords"
-        aria-describedby="emailHelp"
-      />
+      <input name="coords" placeholder="Coordenadas planeta/luna" type="text" class="form-control" id="inputCoords"
+        aria-describedby="emailHelp" />
     </div>
     <div class="form-group">
       <label for="inputType">Tipo</label>
@@ -197,11 +147,22 @@
   function editPlayer(e) {
     let playerId = e.getAttribute("playerId");
     fetch("/api/players/" + playerId)
-      .then(function(response) {
+      .then(function (response) {
         return response.json();
       })
-      .then(function(myJson) {
+      .then(function (myJson) {
         console.log(myJson);
+      });
+  }
+  function deletePlayer(e) {
+    let playerId = e.getAttribute("playerId");
+    fetch("/api/players/" + playerId, { method: 'DELETE' })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        console.log(myJson);
+        location.reload();
       });
   }
 </script>

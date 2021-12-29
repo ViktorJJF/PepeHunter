@@ -15,8 +15,8 @@ module.exports = class Bot {
     this.language = null;
     this.telegramGroupId = null;
     this.telegramId = null;
-    this.ogameEmail = "viktor.developer96@gmail.com";
-    this.ogamePassword = "sed4cfv52309$";
+    this.ogameEmail = "rodrigo.diazranilla@gmail.com";
+    this.ogamePassword = "phoneypeople";
     this.state = null;
     this.userId = null;
     this.page = null;
@@ -56,7 +56,7 @@ module.exports = class Bot {
       const pathToExtension =
         "C:\\Users\\Viktor\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\ipmfkhoihjbbohnfecpmhekhippaplnh\\4.2.0_0";
       this.browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
           `--disable-extensions-except=${pathToExtension}`,
           `--load-extension=${pathToExtension}`,
@@ -446,6 +446,7 @@ module.exports = class Bot {
   }
 
   async checkPlanetActivity(coords, planetType, player, page, pendingXHR) {
+    console.log("🚀 Aqui *** -> coords", coords);
     var [galaxy, system, planet] = coords.split(":");
     await this.goToSolarSystem(coords, page);
     //esperando que todos los XHR finalicen
@@ -460,10 +461,12 @@ module.exports = class Bot {
     let planetExist;
     if (planetType == "planet") {
       planetExist = await page.$(
-        `tr.row>td[rel="planet${planet}"]>.ListImage>a>img.planetTooltip`
+        `.galaxyRow.ctContentRow#galaxyRow${planet} .planetTooltip`
       );
     } else {
-      planetExist = await page.$(`tr.row>td[rel="moon${planet}"]`);
+      planetExist = await page.$(
+        `.galaxyRow.ctContentRow#galaxyRow${planet} .micromoon.moon_a`
+      );
     }
     if (!planetExist) {
       console.log("el planeta no existe");
@@ -498,8 +501,8 @@ module.exports = class Bot {
         var lastActivity = "off";
         let planetSelector = document.querySelector(
           planetType == "planet"
-            ? `tr.row>td[rel="planet${planet}"]>.ListImage`
-            : `tr.row>td[rel="moon${planet}"]`
+            ? `.galaxyRow.ctContentRow#galaxyRow${planet} .planetTooltip`
+            : `.galaxyRow.ctContentRow#galaxyRow${planet} .micromoon.moon_a`
         );
         if (planetSelector.querySelector(".activity")) {
           if (planetSelector.querySelector(".activity.showMinutes")) {

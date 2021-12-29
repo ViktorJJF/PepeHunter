@@ -7,15 +7,16 @@ let playersSchema = new Schema({
   server: String,
   nickname: {
     type: String,
-    required: [true, "el nick del jugador es necesario!"]
+    required: [true, "el nick del jugador es necesario!"],
+    unique: true,
   },
   hunt: {
     type: Boolean,
-    default: false
+    default: false,
   },
   isOn: {
     type: Boolean,
-    default: true
+    default: true,
   },
   planets: [
     {
@@ -26,16 +27,16 @@ let playersSchema = new Schema({
       activities: [
         {
           date: Date,
-          lastActivity: String
-        }
+          lastActivity: String,
+        },
       ],
       active: {
         type: Boolean,
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   ],
-  notes: String
+  notes: String,
 });
 
 module.exports = mongoose.model("Players", playersSchema);

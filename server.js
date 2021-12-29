@@ -9,7 +9,7 @@ const Bot = require("./classes/Bot");
 const hunter = require("./Scripts/hunter.js");
 const autoWatchDog = require("./Scripts/autoWatchDog");
 const scanGalaxy = require("./Scripts/scanGalaxy.js");
-const { timeout } = require("./utils/utils.js");
+const { timeout, getPlayerInfo } = require("./utils/utils.js");
 const Player = require("./models/Players");
 const Galaxy = require("./models/Galaxies");
 const BotModel = require("./models/Bots");
@@ -22,8 +22,7 @@ const { format, utcToZonedTime } = require("date-fns-tz");
 const _ = require("underscore");
 const config = require("./config");
 
-const port = process.env.PORT || 8000;
-require("./Scripts/getPlayerPlanetsFromGalaxy");
+const port = process.env.PORT || 12000;
 
 app.use(express.static(__dirname + "/public"));
 //Express HBS engine
@@ -48,7 +47,7 @@ app.use(bodyParser.json());
 //Helpers
 //DB
 mongoose.connect(
-  "mongodb+srv://ViktorJJF:Sed4cfv52309$@jfbotscluster.88rtm.mongodb.net/pepeBot",
+  config.DB,
   {
     useNewUrlParser: true,
   },
@@ -64,7 +63,7 @@ let playersToHunt = [];
 (async () => {
   //init
   // require("./Scripts/updateTops");
-  require("./services/heroku");
+  // require("./services/heroku");
   // if (config.environment === "development") return;
   await bot.begin("development");
   // await bot.login("jimenezflorestacna@gmail.com", "sed4cfv52309@");
@@ -327,7 +326,8 @@ app.post("/api/players", async (req, res) => {
   let body = req.body;
   let nickname = body.nickname;
   console.log("se agregara al jugador: ", nickname);
-  let playerInfo = await ogameApi.getPlayerInfo(nickname);
+  let playerInfo = await getPlayerInfo(nickname);
+  console.log("🚀 Aqui *** -> playerInfo", playerInfo);
   if (playerInfo) {
     let player = new Player({
       id: playerInfo.id,
@@ -347,6 +347,13 @@ app.post("/api/players", async (req, res) => {
 
   console.log("esta es su info: ", playerInfo);
   res.redirect("/hunter");
+});
+
+app.delete("/api/players/:id", async (req, res) => {
+  let id = req.params.id;
+  console.log("🚀 Aqui *** -> id", id);
+  await Player.deleteOne({ _id: id });
+  res.status(200).json({ ok: true });
 });
 
 app.post("/api/players/planet", async (req, res) => {
@@ -466,8 +473,9 @@ app.get("/api/scan", async (req, res) => {
     .select("-planets.activities")
     .exec();
   if (!playerInfo) {
-    playerInfo = await ogameApi.getPlayerInfo(nickname);
+    playerInfo = await getPlayerInfo(nickname);
   }
+  console.log("🚀 Aqui *** -> playerInfo", playerInfo);
   if (playerInfo) {
     try {
       var page = await bot.createNewPage();
@@ -509,10 +517,10 @@ app.get("/api/scan/universe", async (req, res) => {
     msg: "Empezando a escanear universo",
   });
   //eliminando scan anterior
-  // let galaxies = await Galaxy.deleteMany({
-  //   server: config.SERVER,
-  // });
-  for (let i = 9; i <= 9; i++) {
+  let galaxies = await Galaxy.deleteMany({
+    server: config.SERVER,
+  });
+  for (let i = 1; i <= 9; i++) {
     await scanGalaxy(String(i), bot);
     // await timeout(5 * 1000);
   }

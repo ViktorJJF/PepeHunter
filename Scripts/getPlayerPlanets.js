@@ -6,10 +6,11 @@ const config = require("../config");
 
 let globalPlanets = [];
 let start = async (nickname, bot) => {
-  let playerId = await ogameApi.getPlayerId(nickname);
+  // let playerId = await ogameApi.getPlayerId(nickname);
+  let playerId = "103481";
   console.log("la informacion del jugador es:", playerId);
   let promises = [];
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 9; i++) {
     promises.push(scanGalaxy(i, 1, 249, playerId, bot));
     promises.push(scanGalaxy(i, 250, 499, playerId, bot));
   }
@@ -50,9 +51,9 @@ let scanGalaxy = async (galaxyNumber, from, to, playerId, bot) => {
 
 (async () => {
   let bot = new Bot();
-  await bot.begin("development");
+  await bot.begin("prod");
   await bot.login(config.USER, config.PASS);
-  start("sacz", bot);
+  start("jan Leo", bot);
 })();
 
 module.exports = start;

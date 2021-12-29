@@ -5,20 +5,20 @@ const config = require("../config");
 
 let galaxies = [];
 
-let updatePlayerInfo = async playerId => {
+let updatePlayerInfo = async (playerId) => {
   // let player = await Player.findOne({ server: config.SERVER,id: playerId })
   //   .select("-planets.activities")
   //   .exec();
   let player = await Player.findOne({
     server: config.SERVER,
-    id: playerId
+    id: playerId,
   });
   console.log("actualizando info de: ", player.nickname);
   let planets = player.planets;
   let scanPlanets = [];
-  galaxies.forEach(galaxy => {
-    galaxy.solarSystem.forEach(solarSystem => {
-      solarSystem.forEach(planet => {
+  galaxies.forEach((galaxy) => {
+    galaxy.solarSystem.forEach((solarSystem) => {
+      solarSystem.forEach((planet) => {
         if (planet.playerId == playerId) {
           checkPlanetExist(planet, planets, player);
           scanPlanets.push(planet);
@@ -38,13 +38,13 @@ let checkPlanetExist = (planet, currentPlanets, player) => {
     name: "",
     coords: "",
     planetType: "planet",
-    activities: []
+    activities: [],
   };
   let coords = planet.coords;
   console.log("estamos en ", coords, planet.moon);
   let hasPlanet = false;
   let hasMoon = false;
-  currentPlanets.forEach(currentPlanet => {
+  currentPlanets.forEach((currentPlanet) => {
     if (
       planet.coords == currentPlanet.coords &&
       currentPlanet.planetType == "planet"
@@ -67,7 +67,7 @@ let checkPlanetExist = (planet, currentPlanets, player) => {
       name: planet.name,
       coords: planet.coords,
       planetType: "planet",
-      activities: []
+      activities: [],
     });
   }
   if (!hasMoon && planet.moon) {
@@ -77,7 +77,7 @@ let checkPlanetExist = (planet, currentPlanets, player) => {
       name: "luna",
       coords: planet.coords,
       planetType: "moon",
-      activities: []
+      activities: [],
     });
   }
 };
@@ -109,26 +109,27 @@ let deletePlanets = (currentPlanets, scanPlanets, propertyToCompare) => {
 
 (async () => {
   mongoose.connect(
-    "mongodb+srv://VictorJJF:Sed4cfv52309$@cluster0-ceisv.mongodb.net/pepebot", {
-      useNewUrlParser: true
+    config.DB,
+    {
+      useNewUrlParser: true,
     },
-    (err, res) => {
+    async (err, res) => {
       if (err) throw err;
       console.log("DB online ONLINE");
+      galaxies = await Galaxy.find({
+        server: config.SERVER,
+      });
+      let playersToHunt = await Player.find({
+        server: config.SERVER,
+      })
+        .select("-planets.activities")
+        .exec();
+      for (const player of playersToHunt) {
+        if (player.id !== "101182") await updatePlayerInfo(player.id);
+      }
+      //   console.log(JSON.stringify(playersToHunt, null, "  "));
     }
   );
-  galaxies = await Galaxy.find({
-    server: config.SERVER
-  });
-  let playersToHunt = await Player.find({
-      server: config.SERVER
-    })
-    .select("-planets.activities")
-    .exec();
-  for (const player of playersToHunt) {
-    if (player.id !== "101182") await updatePlayerInfo(player.id);
-  }
-  //   console.log(JSON.stringify(playersToHunt, null, "  "));
 })();
 
 module.exports = updatePlayerInfo;

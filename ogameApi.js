@@ -15,16 +15,16 @@ let endPoint =
 console.log("empezando web scraping en universo: ", endPoint);
 let player = null;
 
-const getPlayerId = nickName => {
+const getPlayerId = (nickName) => {
   return new Promise((resolve, reject) => {
     let playerId = null;
     axios
       .get(endPoint)
-      .then(res => {
+      .then((res) => {
         // console.log(res.data);
-        parseString(res.data, function(err, result) {
+        parseString(res.data, function (err, result) {
           let players = result.players.player;
-          players.forEach(player => {
+          players.forEach((player) => {
             if (player["$"].name.toLowerCase() == nickName) {
               resolve(player["$"].id);
             }
@@ -34,14 +34,14 @@ const getPlayerId = nickName => {
           }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         reject(err);
       });
   });
 };
 
-const getPlanetsCoordinates = playerId => {
+const getPlanetsCoordinates = (playerId) => {
   return new Promise((resolve, reject) => {
     axios
       .get(
@@ -52,19 +52,19 @@ const getPlanetsCoordinates = playerId => {
           ".ogame.gameforge.com/api/playerData.xml?id=" +
           playerId
       )
-      .then(res => {
+      .then((res) => {
         // console.log(res.data);
-        parseString(res.data, function(err, result) {
+        parseString(res.data, function (err, result) {
           let planets = result.playerData.planets[0].planet;
           let coords = [];
-          planets.forEach(planet => {
+          planets.forEach((planet) => {
             coords.push({
               id: planet["$"].id,
               name: planet["$"].name,
               coords: planet["$"].coords,
               planetType: "planet",
               active: true,
-              activities: []
+              activities: [],
             });
             if (planet.hasOwnProperty("moon")) {
               coords.push({
@@ -72,21 +72,21 @@ const getPlanetsCoordinates = playerId => {
                 coords: planet["$"].coords,
                 planetType: "moon",
                 active: true,
-                activities: []
+                activities: [],
               });
             }
           });
           resolve(coords);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         reject(err);
       });
   });
 };
 
-const getPlayerInfo = async nickname => {
+const getPlayerInfo = async (nickname) => {
   console.log("obteniendo información del jugador: ", nickname);
   var nickname = nickname.toLowerCase();
   let playerInfo = { id: 0, nickname: nickname, planets: [] };
@@ -105,5 +105,9 @@ const getPlayerInfo = async nickname => {
 
 module.exports = {
   getPlayerInfo,
-  getPlayerId
+  getPlayerId,
 };
+
+(async () => {
+  console.log(await getPlayerInfo("oVettoCattiVo"));
+})();
