@@ -153,74 +153,78 @@ module.exports = class Bot {
   }
 
   async checkLoginStatus(page) {
-    var page = page || this.page;
-    var currentPage = null;
-    currentPage = await page.evaluate(() => {
-      var selector;
-      selector = document.querySelector("div#toolbarcomponent");
-      if (selector) {
-        console.log("se cumplio mainPage");
-        return "mainPage";
-      }
-      selector = document.querySelector("#joinGame>a>button.button");
-      if (selector) {
-        console.log("se cumplio playoage");
-        return "playPage";
-      }
-      selector = document.querySelector(
-        '.rt-td.action-cell>button[type="button"]'
-      );
-      if (selector) {
-        console.log("se cumplio selecUniversePage");
-        return "selectUniversePage";
-      }
-    });
-    console.log("se verificara en que pagina estamos...");
-    switch (currentPage) {
-      case "mainPage":
-        console.log("no paso nada.. seguimos normal");
-        await page.close();
-        break;
-      case "playPage":
-        try {
-          console.log("nos encontramos en vista playPage");
-          await page.waitForSelector("#joinGame>a>button.button");
-          await page.click("#joinGame>a>button.button");
-          await page.waitForSelector(
-            '.rt-td.action-cell>button[type="button"]'
-          );
+    try {
+      var page = page || this.page;
+      var currentPage = null;
+      currentPage = await page.evaluate(() => {
+        var selector;
+        selector = document.querySelector("div#toolbarcomponent");
+        if (selector) {
+          console.log("se cumplio mainPage");
+          return "mainPage";
+        }
+        selector = document.querySelector("#joinGame>a>button.button");
+        if (selector) {
+          console.log("se cumplio playoage");
+          return "playPage";
+        }
+        selector = document.querySelector(
+          '.rt-td.action-cell>button[type="button"]'
+        );
+        if (selector) {
+          console.log("se cumplio selecUniversePage");
+          return "selectUniversePage";
+        }
+      });
+      console.log("se verificara en que pagina estamos...");
+      switch (currentPage) {
+        case "mainPage":
+          console.log("no paso nada.. seguimos normal");
+          await page.close();
+          break;
+        case "playPage":
+          try {
+            console.log("nos encontramos en vista playPage");
+            await page.waitForSelector("#joinGame>a>button.button");
+            await page.click("#joinGame>a>button.button");
+            await page.waitForSelector(
+              '.rt-td.action-cell>button[type="button"]'
+            );
+            page = await this.clickAndWaitForTarget(
+              '.rt-td.action-cell>button[type="button"]',
+              page,
+              this.browser
+            );
+            await page.close();
+          } catch (error) {
+            console.log("se dio un error en playpage");
+            await this.checkLoginStatus(page);
+          }
+          break;
+        case "selectUniversePage":
+          console.log("nos encontramos en vista universo");
+          console.log("empezaremos el clickAndwait");
           page = await this.clickAndWaitForTarget(
             '.rt-td.action-cell>button[type="button"]',
             page,
             this.browser
           );
+          console.log("se termino el click and wait");
+          //main page ogame
           await page.close();
-        } catch (error) {
-          console.log("se dio un error en playpage");
-          await this.checkLoginStatus(page);
-        }
-        break;
-      case "selectUniversePage":
-        console.log("nos encontramos en vista universo");
-        console.log("empezaremos el clickAndwait");
-        page = await this.clickAndWaitForTarget(
-          '.rt-td.action-cell>button[type="button"]',
-          page,
-          this.browser
-        );
-        console.log("se termino el click and wait");
-        //main page ogame
-        await page.close();
-        break;
-      default:
-        console.log("el caso default: a logearse");
-        await this.login(null, null, page);
-        console.log("cambiamos de pagina");
-        break;
+          break;
+        default:
+          console.log("el caso default: a logearse");
+          await this.login(null, null, page);
+          console.log("cambiamos de pagina");
+          break;
+      }
+      console.log("se retornara la pagina cerrada");
+      // await page.close();
+      return 0;
+    } catch (error) {
+      console.log("aaaaaa", error);
     }
-    console.log("se retornara la pagina cerrada");
-    // await page.close();
-    return 0;
   }
 
   async watchDog(page) {
