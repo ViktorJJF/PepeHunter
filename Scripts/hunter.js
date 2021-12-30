@@ -59,18 +59,18 @@ async function beginHunter(nickname, bot) {
         autoWatchdog(playerInfo.id);
       }
       //__________
-      if (isAllOff)
-        sendTelegramMessage(
-          `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] está <b>totalmente</b>💤💤💤`
-        );
-      else if (playerInfo.isOn == false)
-        sendTelegramMessage(
-          `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] sigue 💤💤💤 desde el anterior scaneo`
-        );
-      else
-        sendTelegramMessage(
-          `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] está 💤💤💤`
-        );
+      // if (isAllOff)
+      //   sendTelegramMessage(
+      //     `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] está <b>totalmente</b>💤💤💤`
+      //   );
+      // else if (playerInfo.isOn == false)
+      //   sendTelegramMessage(
+      //     `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] sigue 💤💤💤 desde el anterior scaneo`
+      //   );
+      // else
+      //   sendTelegramMessage(
+      //     `<b>${playerInfo.nickname}</b> [${playerInfo.planets[0].coords}] está 💤💤💤`
+      //   );
       playerInfo.isOn = false;
     }
     if (isOn) {
