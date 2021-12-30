@@ -67,27 +67,27 @@ let playersToHunt = [];
   // if (config.environment === "development") return;
   await bot.begin(config.environment);
   await bot.login(config.USER, config.PASS);
-  if (config.environment === "development") return;
-  // let playersFromDB = await Player.find(
-  //   {
-  //     server: config.SERVER,
-  //   },
-  //   ["nickname", "hunt"]
-  // );
-  // // console.log("players from db es:", playersFromDB);
-  // //change
-  // playersFromDB.forEach((player) => {
-  //   if (player.hunt) {
-  //     playersToHunt.push(player.nickname);
-  //   }
-  // });
-  // playersFromDB = null;
-  // while (1 == 1) {
-  //   for (const playerToHunt of playersToHunt) {
-  //     await hunter(playerToHunt, bot);
-  //   }
-  //   await timeout(0 * 60 * 1000);
-  // }
+  // if (config.environment === "development") return;
+  let playersFromDB = await Player.find(
+    {
+      server: config.SERVER,
+    },
+    ["nickname", "hunt"]
+  );
+  // console.log("players from db es:", playersFromDB);
+  //change
+  playersFromDB.forEach((player) => {
+    if (player.hunt) {
+      playersToHunt.push(player.nickname);
+    }
+  });
+  playersFromDB = null;
+  while (1 == 1) {
+    for (const playerToHunt of playersToHunt) {
+      await hunter(playerToHunt, bot);
+    }
+    await timeout(0 * 60 * 1000);
+  }
 })();
 
 app.get("/", (req, res) => {
@@ -220,7 +220,7 @@ app.get("/tablas", async (req, res) => {
   let showDetails = req.query.detailed ? req.query.detailed == "true" : false;
   let playerToHunt = await Player.findOne({
     server: config.SERVER,
-    nickname: nickname.toLowerCase(),
+    nickname: nickname,
   });
   // console.log("su info es: ", playerToHunt);
   let planets = playerToHunt.planets;

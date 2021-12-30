@@ -9,7 +9,6 @@ const autoWatchdog = require("../Scripts/autoWatchDog");
 async function beginHunter(nickname, bot) {
   console.log("se aplicara hunter a este jugador: ", nickname);
   console.log("empezando nueva vuelta");
-  var nickname = nickname.toLowerCase();
   try {
     let playerInfo = await Player.findOne({
       server: config.SERVER,

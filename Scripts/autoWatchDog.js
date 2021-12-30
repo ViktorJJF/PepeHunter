@@ -4,20 +4,20 @@ const config = require("../config");
 const Bot = require("../models/Bots");
 const getHours = require("date-fns/getHours");
 
-let autoWatchDog = async playerId => {
+let autoWatchDog = async (playerId) => {
   console.log("empezando autoWatchdog...");
-  let playersToProtect = ["101049", "101182"];
+  let playersToProtect = ["102988", "103367"];
   let isProtected =
     playersToProtect.findIndex(
-      playerToProtect => playerToProtect === playerId
+      (playerToProtect) => playerToProtect === playerId
     ) > -1
       ? true
       : false;
   if (!isProtected) return;
 
   let ogameEmail;
-  if (playerId === "101049") ogameEmail = "juancarlosjf@outlook.com";
-  if (playerId === "101182") ogameEmail = "cs.nma18@gmail.com";
+  if (playerId === "102988") ogameEmail = "viktor.developer96@gmail.com";
+  if (playerId === "103367") ogameEmail = "carlos.jf.1681@gmail.com";
   let playerInfo, botId;
   console.log("email a buscar: ", ogameEmail);
   botId = (
@@ -27,9 +27,9 @@ let autoWatchDog = async playerId => {
   axios
     .post(config.PEPEBOTDOMAIN + "/api/bots/" + botId + "/actions", {
       action: "watchDog",
-      payload: { milliseconds: 5 * 1000 }
+      payload: { milliseconds: 5 * 1000 },
     })
-    .then(async res => {
+    .then(async (res) => {
       await telegramService(
         "<b>" +
           ogameEmail +
@@ -38,7 +38,7 @@ let autoWatchDog = async playerId => {
       console.log("watchDog activado con exito!");
       //   console.log(res.data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log("un error enviando el mensaje de telegram...");
       console.error(err);
     });
