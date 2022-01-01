@@ -67,7 +67,7 @@ let playersToHunt = [];
   // if (config.environment === "development") return;
   await bot.begin(config.environment);
   await bot.login(config.USER, config.PASS);
-  // if (config.environment === "development") return;
+  if (config.environment === "development") return;
   let playersFromDB = await Player.find(
     {
       server: config.SERVER,
@@ -317,6 +317,14 @@ app.get("/api/hunter", async (req, res) => {
 
 app.get("/test", (req, res) => {
   res.render("test");
+});
+
+app.get("/api/players/by-name", async (req, res) => {
+  const name = req.query.name;
+  res.json({
+    ok: true,
+    payload: await getPlayerInfo(name),
+  });
 });
 
 app.post("/api/players", async (req, res) => {
